@@ -1,300 +1,445 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Birthday Celebration</title>
-  <style>
-    .dialog-birthday_message {
-      position: fixed;
-      border: 1px solid #bce3ff;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      top: 5%;
-      z-index: 99;   
-      width: 480px;
-      height: 520px;
-      -webkit-transform: none;
-      margin: auto;
-    }
-
-    .birthday_container {
-      position: relative;
-      margin: 0 auto;  
-      width: 100%;
-      height: 100%;
-      display: block;
-      background: transparent;
-      overflow: hidden;
-    }
-
-    .balloons {
-      z-index: 1;
-      position: absolute;
-      top: 40px;
-      left: 50%;
-      margin-left: -25%;
-    }
-
-    .birthday_container p {
-      z-index: 1;
-      position: absolute;
-      bottom: 40px;
-      font-weight: 500;
-      font-size: 28px;
-      margin: 0 auto;
-      width: 100%;
-      text-align: center;
-    }
-
-    #canvas_confetti {
-      display: inline-block;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    .balloon {
-      display: inline-block;
-      width: 50px;
-      height: 60px;
-      background: hsl(215, 50%, 65%);
-      background: rgba(102, 145, 204, 1);
-      border-radius: 80%;
-      position: relative;
-      box-shadow: inset -10px -10px 0 rgba(0, 0, 0, 0.07);
-      margin: 10px 1px;
-      transition: transform 0.5s ease;
-      z-index: 2;
-      animation: balloons 4s ease-in-out infinite;
-      transform-origin: bottom center;
-    }
-
-    /* Animasyon */
-    @keyframes balloons {
-      0%,
-      100% {
-        transform: translateY(0) rotate(-4deg);
-      }
-      50% {
-        transform: translateY(-25px) rotate(4deg);
-      }
-    }
-
-    .balloon:before {
-      content: "▲";
-      font-size: 20px;
-      color: hsl(215, 30%, 50%);
-      color: rgba(88, 125, 176, 1);
-      display: block;
-      text-align: center;
-      width: 100%;
-      position: absolute;
-      bottom: -13px;
-      z-index: -100;
-    }
-
-    .balloon:after {  
-      display: inline-block;
-      top: 65px;
-      position: absolute;
-      height: 100px;
-      width: 2px;
-      margin: 0 auto;
-      left: 24px;
-      content: "";
-      background: rgba(0, 0, 0, 0.1);
-    }
-
-    /* Balon renkleri */
-    .balloon:nth-child(1) {
-      box-shadow: inset -10px -10px 0 rgba(88, 125, 176, 1);
-    }
-
-    .balloon:nth-child(2) {
-      background: hsl(245, 40%, 65%);
-      animation-duration: 3.5s;
-    }
-
-    .balloon:nth-child(2):before {
-      color: hsl(245, 40%, 65%);
-    }
-
-    .balloon:nth-child(3) {
-      background: hsl(139, 50%, 60%);
-      animation-duration: 3s;
-    }
-
-    .balloon:nth-child(3):before {
-      color: hsl(139, 30%, 50%);
-    }
-
-    .balloon:nth-child(4) {
-      background: hsl(59, 50%, 58%);
-      animation-duration: 4.5s;
-    }
-
-    .balloon:nth-child(4):before {
-      color: hsl(59, 30%, 52%);
-    }
-
-    .balloon:nth-child(5) {
-      background: hsl(23, 55%, 57%);
-      animation-duration: 5s;
-    }
-
-    .balloon:nth-child(5):before {
-      color: hsl(23, 44%, 46%);
-    }
-  </style>
+    <style>
+        /* CSS Kodları */
+      canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+p {
+	margin: 0 0;
+	position: absolute;
+	font: 16px Verdana;
+	color: #eee;
+	height: 25px;
+	top: calc( 100vh - 30px );
+	text-shadow: 0 0 2px white;
+}
+p a {
+	text-decoration: none;
+	color: #aaa;
+}
+span {
+	font-size: 11px;
+}
+p > a:first-of-type {
+	font-size: 20px;
+}
+body {
+	overflow: hidden;
+        }
+    </style>
 </head>
 <body>
-  <div class="dialog-birthday_message">
-    <div id="birthday_container" class="birthday_container">
-      <div class="balloons">
-        <div class="balloon"></div>
-        <div class="balloon"></div>
-        <div class="balloon"></div>
-        <div class="balloon"></div>
-        <div class="balloon"></div>
-      </div>
-      <p>Happy Birthday, John!</p> 
-      <canvas id="canvas_confetti" width="600px" height="400px"></canvas>
-    </div>
-  </div>
+    <canvas id="c"></canvas>
+    <p><span><a href=></a></span></p>
+    <script>
+        // JavaScript Kodları
+        var w = c.width = window.innerWidth,
+		h = c.height = window.innerHeight,
+		ctx = c.getContext( '2d' ),
+		
+		hw = w / 2, // half-width
+		hh = h / 2,
+		
+		opts = {
+			strings: [ 'HAPPY', 'BIRTHDAY', ' MOM!' ],
+			charSize: 30,
+			charSpacing: 35,
+			lineHeight: 40,
+			
+			cx: w / 2,
+			cy: h / 2,
+			
+			fireworkPrevPoints: 10,
+			fireworkBaseLineWidth: 5,
+			fireworkAddedLineWidth: 8,
+			fireworkSpawnTime: 200,
+			fireworkBaseReachTime: 30,
+			fireworkAddedReachTime: 30,
+			fireworkCircleBaseSize: 20,
+			fireworkCircleAddedSize: 10,
+			fireworkCircleBaseTime: 30,
+			fireworkCircleAddedTime: 30,
+			fireworkCircleFadeBaseTime: 10,
+			fireworkCircleFadeAddedTime: 5,
+			fireworkBaseShards: 5,
+			fireworkAddedShards: 5,
+			fireworkShardPrevPoints: 3,
+			fireworkShardBaseVel: 4,
+			fireworkShardAddedVel: 2,
+			fireworkShardBaseSize: 3,
+			fireworkShardAddedSize: 3,
+			gravity: .1,
+			upFlow: -.1,
+			letterContemplatingWaitTime: 360,
+			balloonSpawnTime: 20,
+			balloonBaseInflateTime: 10,
+			balloonAddedInflateTime: 10,
+			balloonBaseSize: 20,
+			balloonAddedSize: 20,
+			balloonBaseVel: .4,
+			balloonAddedVel: .4,
+			balloonBaseRadian: -( Math.PI / 2 - .5 ),
+			balloonAddedRadian: -1,
+		},
+		calc = {
+			totalWidth: opts.charSpacing * Math.max( opts.strings[0].length, opts.strings[1].length )
+		},
+		
+		Tau = Math.PI * 2,
+		TauQuarter = Tau / 4,
+		
+		letters = [];
 
-  <script>
-    //Setup canvas by creating in doc
-    var canvas = document.getElementById('canvas_confetti');
-    var context = canvas.getContext('2d');
-    canvas.width = document.getElementById('birthday_container').clientWidth;
-    canvas.height = document.getElementById('birthday_container').clientHeight;
-    //document.body.appendChild(canvas);
-    document.getElementById('birthday_container').appendChild(canvas);
-    var calculatedDensity = canvas.width * 0.0085;
-    var calculatedVelocity = canvas.width * 0.0037;
-    var calculatedLife = canvas.height * 0.65;
-    var calculatedStartingX = canvas.width / 2;
+ctx.font = opts.charSize + 'px Verdana';
 
-    
+function Letter( char, x, y ){
+	this.char = char;
+	this.x = x;
+	this.y = y;
+	
+	this.dx = -ctx.measureText( char ).width / 2;
+	this.dy = +opts.charSize / 2;
+	
+	this.fireworkDy = this.y - hh;
+	
+	var hue = x / calc.totalWidth * 360;
+	
+	this.color = 'hsl(hue,80%,50%)'.replace( 'hue', hue );
+	this.lightAlphaColor = 'hsla(hue,80%,light%,alp)'.replace( 'hue', hue );
+	this.lightColor = 'hsl(hue,80%,light%)'.replace( 'hue', hue );
+	this.alphaColor = 'hsla(hue,80%,50%,alp)'.replace( 'hue', hue );
+	
+	this.reset();
+}
+Letter.prototype.reset = function(){
+	
+	this.phase = 'firework';
+	this.tick = 0;
+	this.spawned = false;
+	this.spawningTime = opts.fireworkSpawnTime * Math.random() |0;
+	this.reachTime = opts.fireworkBaseReachTime + opts.fireworkAddedReachTime * Math.random() |0;
+	this.lineWidth = opts.fireworkBaseLineWidth + opts.fireworkAddedLineWidth * Math.random();
+	this.prevPoints = [ [ 0, hh, 0 ] ];
+}
+Letter.prototype.step = function(){
+	
+	if( this.phase === 'firework' ){
+		
+		if( !this.spawned ){
+			
+			++this.tick;
+			if( this.tick >= this.spawningTime ){
+				
+				this.tick = 0;
+				this.spawned = true;
+			}
+			
+		} else {
+			
+			++this.tick;
+			
+			var linearProportion = this.tick / this.reachTime,
+					armonicProportion = Math.sin( linearProportion * TauQuarter ),
+					
+					x = linearProportion * this.x,
+					y = hh + armonicProportion * this.fireworkDy;
+			
+			if( this.prevPoints.length > opts.fireworkPrevPoints )
+				this.prevPoints.shift();
+			
+			this.prevPoints.push( [ x, y, linearProportion * this.lineWidth ] );
+			
+			var lineWidthProportion = 1 / ( this.prevPoints.length - 1 );
+			
+			for( var i = 1; i < this.prevPoints.length; ++i ){
+				
+				var point = this.prevPoints[ i ],
+						point2 = this.prevPoints[ i - 1 ];
+					
+				ctx.strokeStyle = this.alphaColor.replace( 'alp', i / this.prevPoints.length );
+				ctx.lineWidth = point[ 2 ] * lineWidthProportion * i;
+				ctx.beginPath();
+				ctx.moveTo( point[ 0 ], point[ 1 ] );
+				ctx.lineTo( point2[ 0 ], point2[ 1 ] );
+				ctx.stroke();
+			
+			}
+			
+			if( this.tick >= this.reachTime ){
+				
+				this.phase = 'contemplate';
+				
+				this.circleFinalSize = opts.fireworkCircleBaseSize + opts.fireworkCircleAddedSize * Math.random();
+				this.circleCompleteTime = opts.fireworkCircleBaseTime + opts.fireworkCircleAddedTime * Math.random() |0;
+				this.circleCreating = true;
+				this.circleFading = false;
+				
+				this.circleFadeTime = opts.fireworkCircleFadeBaseTime + opts.fireworkCircleFadeAddedTime * Math.random() |0;
+				this.tick = 0;
+				this.tick2 = 0;
+				
+				this.shards = [];
+				
+				var shardCount = opts.fireworkBaseShards + opts.fireworkAddedShards * Math.random() |0,
+						angle = Tau / shardCount,
+						cos = Math.cos( angle ),
+						sin = Math.sin( angle ),
+						
+						x = 1,
+						y = 0;
+				
+				for( var i = 0; i < shardCount; ++i ){
+					var x1 = x;
+					x = x * cos - y * sin;
+					y = y * cos + x1 * sin;
+					
+					this.shards.push( new Shard( this.x, this.y, x, y, this.alphaColor ) );
+				}
+			}
+			
+		}
+	} else if( this.phase === 'contemplate' ){
+		
+		++this.tick;
+		
+		if( this.circleCreating ){
+			
+			++this.tick2;
+			var proportion = this.tick2 / this.circleCompleteTime,
+					armonic = -Math.cos( proportion * Math.PI ) / 2 + .5;
+			
+			ctx.beginPath();
+			ctx.fillStyle = this.lightAlphaColor.replace( 'light', 50 + 50 * proportion ).replace( 'alp', proportion );
+			ctx.beginPath();
+			ctx.arc( this.x, this.y, armonic * this.circleFinalSize, 0, Tau );
+			ctx.fill();
+			
+			if( this.tick2 > this.circleCompleteTime ){
+				this.tick2 = 0;
+				this.circleCreating = false;
+				this.circleFading = true;
+			}
+		} else if( this.circleFading ){
+		
+			ctx.fillStyle = this.lightColor.replace( 'light', 70 );
+			ctx.fillText( this.char, this.x + this.dx, this.y + this.dy );
+			
+			++this.tick2;
+			var proportion = this.tick2 / this.circleFadeTime,
+					armonic = -Math.cos( proportion * Math.PI ) / 2 + .5;
+			
+			ctx.beginPath();
+			ctx.fillStyle = this.lightAlphaColor.replace( 'light', 100 ).replace( 'alp', 1 - armonic );
+			ctx.arc( this.x, this.y, this.circleFinalSize, 0, Tau );
+			ctx.fill();
+			
+			if( this.tick2 >= this.circleFadeTime )
+				this.circleFading = false;
+			
+		} else {
+			
+			ctx.fillStyle = this.lightColor.replace( 'light', 70 );
+			ctx.fillText( this.char, this.x + this.dx, this.y + this.dy );
+		}
+		
+		for( var i = 0; i < this.shards.length; ++i ){
+			
+			this.shards[ i ].step();
+			
+			if( !this.shards[ i ].alive ){
+				this.shards.splice( i, 1 );
+				--i;
+			}
+		}
+		
+		if( this.tick > opts.letterContemplatingWaitTime ){
+			
+			this.phase = 'balloon';
+			
+			this.tick = 0;
+			this.spawning = true;
+			this.spawnTime = opts.balloonSpawnTime * Math.random() |0;
+			this.inflating = false;
+			this.inflateTime = opts.balloonBaseInflateTime + opts.balloonAddedInflateTime * Math.random() |0;
+			this.size = opts.balloonBaseSize + opts.balloonAddedSize * Math.random() |0;
+			
+			var rad = opts.balloonBaseRadian + opts.balloonAddedRadian * Math.random(),
+					vel = opts.balloonBaseVel + opts.balloonAddedVel * Math.random();
+			
+			this.vx = Math.cos( rad ) * vel;
+			this.vy = Math.sin( rad ) * vel;
+		}
+	} else if( this.phase === 'balloon' ){
+			
+		ctx.strokeStyle = this.lightColor.replace( 'light', 80 );
+		
+		if( this.spawning ){
+			
+			++this.tick;
+			ctx.fillStyle = this.lightColor.replace( 'light', 70 );
+			ctx.fillText( this.char, this.x + this.dx, this.y + this.dy );
+			
+			if( this.tick >= this.spawnTime ){
+				this.tick = 0;
+				this.spawning = false;
+				this.inflating = true;	
+			}
+		} else if( this.inflating ){
+			
+			++this.tick;
+			
+			var proportion = this.tick / this.inflateTime,
+			    x = this.cx = this.x,
+					y = this.cy = this.y - this.size * proportion;
+			
+			ctx.fillStyle = this.alphaColor.replace( 'alp', proportion );
+			ctx.beginPath();
+			generateBalloonPath( x, y, this.size * proportion );
+			ctx.fill();
+			
+			ctx.beginPath();
+			ctx.moveTo( x, y );
+			ctx.lineTo( x, this.y );
+			ctx.stroke();
+			
+			ctx.fillStyle = this.lightColor.replace( 'light', 70 );
+			ctx.fillText( this.char, this.x + this.dx, this.y + this.dy );
+			
+			if( this.tick >= this.inflateTime ){
+				this.tick = 0;
+				this.inflating = false;
+			}
+			
+		} else {
+			
+			this.cx += this.vx;
+			this.cy += this.vy += opts.upFlow;
+			
+			ctx.fillStyle = this.color;
+			ctx.beginPath();
+			generateBalloonPath( this.cx, this.cy, this.size );
+			ctx.fill();
+			
+			ctx.beginPath();
+			ctx.moveTo( this.cx, this.cy );
+			ctx.lineTo( this.cx, this.cy + this.size );
+			ctx.stroke();
+			
+			ctx.fillStyle = this.lightColor.replace( 'light', 70 );
+			ctx.fillText( this.char, this.cx + this.dx, this.cy + this.dy + this.size );
+			
+			if( this.cy + this.size < -hh || this.cx < -hw || this.cy > hw  )
+				this.phase = 'done';
+			
+		}
+	}
+}
+function Shard( x, y, vx, vy, color ){
+	
+	var vel = opts.fireworkShardBaseVel + opts.fireworkShardAddedVel * Math.random();
+	
+	this.vx = vx * vel;
+	this.vy = vy * vel;
+	
+	this.x = x;
+	this.y = y;
+	
+	this.prevPoints = [ [ x, y ] ];
+	this.color = color;
+	
+	this.alive = true;
+	
+	this.size = opts.fireworkShardBaseSize + opts.fireworkShardAddedSize * Math.random();
+}
+Shard.prototype.step = function(){
+	
+	this.x += this.vx;
+	this.y += this.vy += opts.gravity;
+	
+	if( this.prevPoints.length > opts.fireworkShardPrevPoints )
+		this.prevPoints.shift();
+	
+	this.prevPoints.push( [ this.x, this.y ] );
+	
+	var lineWidthProportion = this.size / this.prevPoints.length;
+	
+	for( var k = 0; k < this.prevPoints.length - 1; ++k ){
+		
+		var point = this.prevPoints[ k ],
+				point2 = this.prevPoints[ k + 1 ];
+		
+		ctx.strokeStyle = this.color.replace( 'alp', k / this.prevPoints.length );
+		ctx.lineWidth = k * lineWidthProportion;
+		ctx.beginPath();
+		ctx.moveTo( point[ 0 ], point[ 1 ] );
+		ctx.lineTo( point2[ 0 ], point2[ 1 ] );
+		ctx.stroke();
+		
+	}
+	
+	if( this.prevPoints[ 0 ][ 1 ] > hh )
+		this.alive = false;
+}
+function generateBalloonPath( x, y, size ){
+	
+	ctx.moveTo( x, y );
+	ctx.bezierCurveTo( x - size / 2, y - size / 2,
+									 	 x - size / 4, y - size,
+									   x,            y - size );
+	ctx.bezierCurveTo( x + size / 4, y - size,
+									   x + size / 2, y - size / 2,
+									   x,            y );
+}
 
-        //Generating many particles
-        //Make object with settings for function
-        var particles = {},
-            particleIndex = 0,
-            settings = {
-                density: calculatedDensity,
-                particleSize: 8,
-                particleSizeVariety: 1.5,
-                startingX: calculatedStartingX,
-                startingY: -20,
-                velX: calculatedVelocity,
-                velY:2,
-                gravity: 0.015,
-                //maxLife: 300,
-                maxLife: calculatedLife,
-                particleColours: ["#F06292","#BA68C8","#64B5F6","#4DD0E1","#81C784","#DCE775","#FFD54F","#FF8A65","#EEEEEE"]
-            };
+function anim(){
+	
+	window.requestAnimationFrame( anim );
+	
+	ctx.fillStyle = '#000000';
+	ctx.fillRect( 0, 0, w, h );
+	
+	ctx.translate( hw, hh );
+	
+	var done = true;
+	for( var l = 0; l < letters.length; ++l ){
+		
+		letters[ l ].step();
+		if( letters[ l ].phase !== 'done' )
+			done = false;
+	}
+	
+	ctx.translate( -hw, -hh );
+	
+	if( done )
+		for( var l = 0; l < letters.length; ++l )
+			letters[ l ].reset();
+}
 
-        //Function that will create particles
-        function Particle() {
-            //Starting positions and velocities
-            this.x = settings.startingX;
-            this.y = settings.startingY;
-            //Random X and Y velocities
-            this.vx = (Math.random() * (settings.velX)) - (settings.velX/2);
-            this.vy = (Math.random() * (settings.velY)) - (settings.velY/2);
-            //this.vx = 10;
-            //this.vy = 10;
+for( var i = 0; i < opts.strings.length; ++i ){
+	for( var j = 0; j < opts.strings[ i ].length; ++j ){
+		letters.push( new Letter( opts.strings[ i ][ j ], 
+														j * opts.charSpacing + opts.charSpacing / 2 - opts.strings[ i ].length * opts.charSize / 2,
+														i * opts.lineHeight + opts.lineHeight / 2 - opts.strings.length * opts.lineHeight / 2 ) );
+	}
+}
 
-            //Set up rotation & center of origin
-            this.rot = 0;
-            this.centerOfOriginX = -this.particleSize/2;
-            this.centerOfOriginY = -this.particleSize/4;
+anim();
 
-            this.particleSize = parseInt((Math.random()*(settings.particleSizeVariety*2)) + settings.particleSize);
+window.addEventListener( 'resize', function(){
+	
+	w = c.width = window.innerWidth;
+	h = c.height = window.innerHeight;
+	
+	hw = w / 2;
+	hh = h / 2;
+	
+	ctx.font = opts.charSize + 'px Verdana';
 
-            //Choose a random colour
-            this.particleColor = settings.particleColours[parseInt(Math.random()*settings.particleColours.length)];
-
-            //Add new particle to index - this is a way to store the particles created
-            particleIndex++;
-            particles[particleIndex] = this;
-            this.id = particleIndex;
-            //Will be used later to remove particle
-            this.life = -10 + parseInt(Math.random()*20);
-        }
-
-        //Add a 'draw' method to the Particle function
-        Particle.prototype.draw = function() {
-
-            this.x += this.vx;
-            this.y += this.vy;
-
-            //calculate rotation
-            var period = 100;
-            this.rot += Math.sin(this.life * 2 * Math.PI / period)/2 * (Math.random()*2);
-
-            //Add gravity
-            this.vy += settings.gravity;
-
-            //Age the particle by adding to 'life'
-            this.life++;
-
-            //Remove the particle if it's old
-            if (this.life >= settings.maxLife) {
-                delete particles[this.id];
-            }
-
-            //Create shape
-            context.clearRect(0, settings.groundLevel, canvas.width, canvas.height);
-            context.beginPath();
-            context.fillStyle = this.particleColor;
-            //save context position
-            context.save();
-            context.translate(this.x,this.y);
-
-            var rotationAmount = 5;
-            //rotate by sine value
-            context.rotate(this.rot/rotationAmount);
-
-            //translate to near random center of origin
-            context.translate(this.centerOfOriginX,this.centerOfOriginY);
-            //context.translate(0,0);
-
-            context.globalAlpha = 0.9;
-            context.fillRect(0,0,this.particleSize,this.particleSize/2);
-            context.restore();
-        }
-
-        //Set up interval to draw particles
-        setInterval(function() {
-            //Fillstyle transparency adds motion trails
-            //#673AB7 purple
-            //#2196F3 blue
-            //#009688 teal
-            //#FFEB3B yellow
-            // "rgba(39,174,96,.98)"; green
-            context.fillStyle = '#f7fcfd'
-            context.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Draw the particles
-            for (var i = 0; i < settings.density; i++) {
-                // Random chance of creating a particle corresponding to an chance of 1 per second per "density" value
-                if (Math.random() > 0.97) {
-                  new Particle();
-                }
-            }
-
-            //Use the draw method for all the particles in particles[]
-            for (var i in particles) {
-              particles[i].draw();
-            }
-        }, 16);
-
-  </script>
+        });
+    </script>
 </body>
 </html>
